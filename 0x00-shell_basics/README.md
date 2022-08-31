@@ -1,1 +1,1 @@
-current directory contents long format with user and group IDs numerically hidden files
+script that creates a directory named my_first _directory in the /tmp/ directory
