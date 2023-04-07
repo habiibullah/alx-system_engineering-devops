@@ -34,30 +34,26 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-# The frontend only listens on port 80
-# If it detects a LetsEncrypt request, is uses the LE backend
-# Else it goes to the default backend for the web servers
-frontend http
-	bind *:80
+# Setting up SSL from tutorial
 
-	# This is our new config that listens on port 443 for SSL connections
-	bind *:443 ssl crt /etc/ssl/www.amonkeyprogrammer.tech/www.amonkeyprogrammer.tech.pem
+frontend www-http
+        bind *:80
+        reqadd X-Forwarded-Proto:\ http
+        default_backend www-backend
 
-	# Test URI to see if its a letsencrypt request	
-	acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-	use_backend letsencrypt-backend if letsencrypt-acl
+frontend www-https
+        bind *:443 ssl crt /etc/haproxy/certs/www.melissax.online.pem
+        reqadd X-Forwarded-Proto:\ https
+        acl letsencrypt-acl path_beg /.well-known/acme-challenge/
+        use_backend letsencrypt-backend if letsencrypt-acl
+        default_backend www-backend
 
-	mode http
-	default_backend web-backend
+backend www-backend
+        balance roundrobin
+        redirect scheme https if !{ ssl_fc }
+        server 338-web-01 18.209.178.197:80 check
+        server 338-web-02 18.204.20.146:80 check
 
-# LE Backend
 backend letsencrypt-backend
-	server letsencrypt 127.0.0.1:8888
-
-# Normal (default) Backend
-# for web apps
-backend web-backend
-	balance roundrobin
-	server web-01 18.209.178.197:80 check
-	server web-02 18.204.20.146:80 check
+        server letsencrypt 127.0.0.1:54321
 
