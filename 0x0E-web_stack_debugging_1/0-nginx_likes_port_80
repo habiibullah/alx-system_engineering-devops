@@ -1,4 +1,6 @@
-olution to Webstack Debugging #1 challenge
+#!/usr/bin/env bash
+
+# solution to Webstack Debugging #1 challenge
 # Approach: Eliminates faulty symlinks to Nginx server block config file
 sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
