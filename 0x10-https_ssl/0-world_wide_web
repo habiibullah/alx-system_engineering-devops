@@ -7,11 +7,11 @@ domain="$1"                                         # Domain name to audit.
 subdomain="$2"                                      # Specific subdomain to audit.
 
 print_host() {
-    host_record=$(
+    host_rec=$(
         dig "$1" | grep -A1 'ANSWER SECTION:' | tail -n 1
     )
 
-    echo "$host_record" |
+    echo "$host_rec" |
     awk '{print "The subdomain","'"$subdomain"'","is a",$4,"record and points to",$5}'
 }
 
