@@ -1,5 +1,4 @@
-
-bal
+global
 	log /dev/log	local0
 	log /dev/log	local1 notice
 	chroot /var/lib/haproxy
@@ -20,38 +19,41 @@ bal
 	ssl-default-bind-options no-sslv3
 
 defaults
-        log     global
-        mode    http
-        option  httplog
-        option  dontlognull
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
         timeout connect 5000
         timeout client  50000
         timeout server  50000
-        errorfile 400 /etc/haproxy/errors/400.http
-        errorfile 403 /etc/haproxy/errors/403.http
-        errorfile 408 /etc/haproxy/errors/408.http
-        errorfile 500 /etc/haproxy/errors/500.http
-        errorfile 502 /etc/haproxy/errors/502.http
-        errorfile 503 /etc/haproxy/errors/503.http
-        errorfile 504 /etc/haproxy/errors/504.http
+	errorfile 400 /etc/haproxy/errors/400.http
+	errorfile 403 /etc/haproxy/errors/403.http
+	errorfile 408 /etc/haproxy/errors/408.http
+	errorfile 500 /etc/haproxy/errors/500.http
+	errorfile 502 /etc/haproxy/errors/502.http
+	errorfile 503 /etc/haproxy/errors/503.http
+	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend web_front
+# Setting up SSL from tutorial
+
+frontend www-http
         bind *:80
+        reqadd X-Forwarded-Proto:\ http
+        default_backend www-backend
 
-        bind *:443 ssl crt /etc/ssl/www.chukwuemeka-hbnb.tech/www.chukwuemeka-hbnb.tech.pem
-
-	redirect scheme https code 301 if !{ ssl_fc }
-
+frontend www-https
+        bind *:443 ssl crt /etc/haproxy/certs/habiib4code.tech.pem
+        http-request redirect scheme https code 301 unless { ssl_fc }
+        reqadd X-Forwarded-Proto:\ https
         acl letsencrypt-acl path_beg /.well-known/acme-challenge/
         use_backend letsencrypt-backend if letsencrypt-acl
+        default_backend www-backend
 
-        default_backend web_back
+backend www-backend
+        balance roundrobin
+        redirect scheme https if !{ ssl_fc }
+        server 338-web-01 18.209.178.197:80 check
+        server 338-web-02 18.204.20.146:80 check
 
 backend letsencrypt-backend
-        server letsencrypt 127.0.0.1:8888
-
-backend web_back
-        balance roundrobin
-        server 36755-web-01 18.209.178.197:80 check
-        server 36755-web-02 18.204.20.146:80 check
-
+        server letsencrypt 127.0.0.1:54321
