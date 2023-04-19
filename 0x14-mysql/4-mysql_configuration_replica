@@ -1,0 +1,16 @@
+[mysqld]
+server-id = 2
+
+sudo systemctl restart mysql
+
+STOP SLAVE;
+CHANGE MASTER TO
+  MASTER_HOST='web-01',
+  MASTER_USER='replica_user',
+  MASTER_PASSWORD='root',
+  MASTER_LOG_FILE='mysql-bin.000002',
+  MASTER_LOG_POS=757;
+
+START SLAVE;
+SHOW SLAVE STATUS\G
+

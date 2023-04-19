@@ -1,0 +1,8 @@
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+# bind-address            = 54.158.209.232	
+
+
+[mysqld]
+log-bin = mysql-bin
+server-id = 1
+
