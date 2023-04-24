@@ -1,27 +1,35 @@
 #!/usr/bin/python3
-"""fetching json data from an api"""
-
+"""
+Request from API; Return TODO list progress given employee ID
+"""
 import requests
 from sys import argv
 
-if __name__ == "__main__":
-    user_id = argv[1]
-    user_url = "https://jsonplaceholder.typicode.com/users/" + user_id
-    user_dict = requests.get(user_url).json()
-    user_name = user_dict.get("name")
-    user_todo = requests.get("https://jsonplaceholder.typicode.com/todos")
-    user_todo = user_todo.json()
-    total_todo = 0
-    completed_titles = []
-    number_completed = 0
 
-    for item in user_todo:
-        if item.get("userId") == int(user_id):
-            total_todo += 1
-            if item.get("completed") is True:
-                number_completed += 1
-                completed_titles.append(item.get("title"))
-    print("Employee {} is done with tasks({}/{}):".format(
-        user_name, number_completed, total_todo))
-    for title in completed_titles:
-        print("\t {}".format(title))
+def display():
+    """return API data"""
+    users_req = requests.get("http://jsonplaceholder.typicode.com/users")
+    for user_nam in users_req.json():
+        if user_nam.get('id') == int(argv[1]):
+            EMPLOYEE_NAME = (user_nam.get('name'))
+            break
+    TOTAL_NUM_OF_TASKS = 0
+    NUMBER_OF_DONE_TASKS = 0
+    TASK_TITLE = []
+    user_todos = requests.get("http://jsonplaceholder.typicode.com/todos")
+    for user_td in user_todos.json():
+        if user_td.get('userId') == int(argv[1]):
+            TOTAL_NUM_OF_TASKS += 1
+            if user_td.get('completed') is True:
+                    NUMBER_OF_DONE_TASKS += 1
+                    TASK_TITLE.append(user_td.get('title'))
+    print("Employee {} is done with tasks({}/{}):".format(EMPLOYEE_NAME,
+                                                          NUMBER_OF_DONE_TASKS,
+                                                          TOTAL_NUM_OF_TASKS))
+    for task in TASK_TITLE:
+        print("\t {}".format(task))
+
+
+if __name__ == "__main__":
+    display()
+
