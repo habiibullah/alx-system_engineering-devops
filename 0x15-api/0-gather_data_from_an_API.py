@@ -25,4 +25,3 @@ if __name__ == "__main__":
         users_name, number_completed, todo_total))
     for title in completed_titles:
         print("\t {}".format(title))
-

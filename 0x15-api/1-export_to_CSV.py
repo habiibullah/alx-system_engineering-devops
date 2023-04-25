@@ -8,7 +8,7 @@ import requests
 from sys import argv
 
 
-def to_csv():
+if __name__ == "__main__":
     """return API data"""
     users = requests.get("http://jsonplaceholder.typicode.com/users")
     for user in users.json():
@@ -32,8 +32,3 @@ def to_csv():
             writer.writerow({"USER_ID": argv[1], "USERNAME": USERNAME,
                              "TASK_COMPLETED_STATUS": task[0],
                              "TASK_TITLE": task[1]})
-
-
-if __name__ == "__main__":
-    to_csv()
-
