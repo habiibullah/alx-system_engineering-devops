@@ -26,8 +26,7 @@ def all_to_json():
         todo = []
         for task in TASK_STATUS_TITLE:
             if task[0] == u[0]:
-                todo.append({"task": task[2], "completed": task[1],
-                "username": u[1]})
+                todo.append({"task": task[2], "completed": task[1], "username": u[1]})
         data[str(u[0])] = todo
     filename = "todo_all_employees.json"
     with open(filename, "w") as f:
