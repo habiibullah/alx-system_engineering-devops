@@ -1,4 +1,4 @@
-!/usr/bin/python3
+#!/usr/bin/python3
 """Export data from an API to JSON format.
 """
 from json import dumps
