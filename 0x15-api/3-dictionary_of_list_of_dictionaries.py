@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+!/usr/bin/python3
 """Export data from an API to JSON format.
 """
 from json import dumps
@@ -59,4 +59,3 @@ if __name__ == '__main__':
     # Filename example: `todo_all_employees.json`
     with open(filename, 'w', encoding='utf-8') as jsonfile:
         jsonfile.write(dumps(users_tasks))
-
