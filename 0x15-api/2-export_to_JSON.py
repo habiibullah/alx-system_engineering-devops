@@ -40,4 +40,3 @@ if __name__ == '__main__':
     # Filename example: `{user_id}.json`
     with open(filename, 'w', encoding='utf-8') as jsonfile:
         jsonfile.write(dumps({emp_id: user_tasks}))
-
