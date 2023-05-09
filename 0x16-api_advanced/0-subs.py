@@ -23,12 +23,12 @@ def number_of_subscribers(subreddit):
     user_agent = {'User-Agent': 'Python/requests'}
 
     # Get the Response of the Reddit API
-    response = requests.get(api_uri, headers=user_agent,
+    res = requests.get(api_uri, headers=user_agent,
                        allow_redirects=False)
 
     # Checks if the subreddit is invalid
-    if response.status_code in [302, 404]:
+    if res.status_code in [302, 404]:
         return 0
 
     # Returns the total subscribers of the subreddit
-    return response.json().get('data').get('subscribers')
+    return res.json().get('data').get('subscribers')
